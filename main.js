@@ -63,6 +63,16 @@ var botaovoltar = {
     width: 130,
     height: 50,
 };
+var animacao = {
+    animando: false,
+    comecoX: 0,
+    comecoY: 0,
+    fimX: 0,
+    fimY: 0,
+    atualX: 0,
+    atualY: 0,
+    speed: 5
+};
 
 function isInside(pos, rect) {
     return pos.x > rect.x && pos.x < rect.x + rect.width && pos.y < rect.y + rect.height && pos.y > rect.y
@@ -94,9 +104,6 @@ canvas.addEventListener('click', function(evt) {
     var mousePos = getMousePos(canvas, evt);
     const ctx = canvas.getContext('2d');
     if (isInside(mousePos, botao) && vez==1) {
-        var audio1 = new Audio();
-        audio1.src = "audio/tiro.mp3";
-        audio1.play();
         if (ordemBalas[balaDaVez] == 0){
             atualizarVez(ordemBalas);
             ctx.font = "40px Helvetica";
@@ -107,6 +114,10 @@ canvas.addEventListener('click', function(evt) {
             ordemBalas.shift()
         }
         else{
+            var audio1 = new Audio();
+            audio1.src = "audio/tiro.mp3";
+            audio1.play();
+            iniciarAnimacaoTiro(vez);
             atualizarVez(ordemBalas);
             ctx.font = "40px Helvetica";
             ctx.fillStyle = "black";
@@ -132,6 +143,10 @@ canvas.addEventListener('click', function(evt) {
             ordemBalas.shift()
         }
         else{
+            var audio1 = new Audio();
+            audio1.src = "audio/tiro.mp3";
+            audio1.play();
+            iniciarAnimacaoTiro(vez);
             atualizarVez(ordemBalas);
             ctx.font = "40px Helvetica";
             ctx.fillStyle = "black";
@@ -157,6 +172,9 @@ canvas.addEventListener('click', function(evt) {
             ordemBalas.shift()
         }
         else{
+            var audio1 = new Audio();
+            audio1.src = "audio/tiro.mp3";
+            audio1.play();
             atualizarVez(ordemBalas);
             ctx.font = "40px Helvetica";
             ctx.fillStyle = "black";
@@ -182,6 +200,9 @@ canvas.addEventListener('click', function(evt) {
             ordemBalas.shift()
         }
         else{
+            var audio1 = new Audio();
+            audio1.src = "audio/tiro.mp3";
+            audio1.play();
             atualizarVez(ordemBalas);
             ctx.font = "40px Helvetica";
             ctx.fillStyle = "black";
@@ -501,8 +522,9 @@ for (var i = 0; i < vazio; i++){
 
 function draw(ctx) {
     if (vez == 1){
+        setTimeout(function(){
         ctx.strokeStyle = "brown";
-        ctx.fillStyle = "brown";
+        ctx.fillStyle = "brown";    
         ctx.rect(900, 300, 160, 100);
         ctx.fill();
         ctx.stroke();
@@ -549,11 +571,14 @@ function draw(ctx) {
         ctx.fillStyle = "black";
         ctx.fillText('Atirar em si',  botao3.x + 5 , botao3.y + 30 );
         ctx.fill();
-        
+    },1500)
     }
     else if (vez == 2){
+        setTimeout(function(){
+        ctx.save();
         ctx.strokeStyle = "brown";
         ctx.fillStyle = "brown";
+
         ctx.rect(230, 300, 160, 100);
         ctx.fill();
         ctx.stroke();
@@ -597,21 +622,55 @@ function draw(ctx) {
         ctx.fillStyle = "black";
         ctx.fillText('Atirar em si',  botao4.x + 5 , botao4.y + 30 );
         ctx.fill();
-        
+    },1500)
     }
 }
 var tirox = 250
 
+function iniciarAnimacaoTiro(vez) {
+    animacao.animando = true;
+    if (vez == 1) {
+        animacao.comecoX = 450;
+        animacao.comecoY = 325;
+        animacao.fimX = 1125;
+        animacao.fimY = 325;
+    } else if (vez == 2) {
+        animacao.comecoX = 950;
+        animacao.comecoY = 325;
+        animacao.fimX = 142;
+        animacao.fimY = 325;
+    }
+    animacao.atualX = animacao.comecoX;
+    animacao.atualY = animacao.comecoY;
+}
+
 function update(time) {
-    ctx.ClearRect(tirox, 300, 30, 20);
-    tirox++;
+    if (animacao.animando) {
+        if (Math.abs(animacao.atualX - animacao.fimX) < animacao.speed) {
+            animacao.animando = false;
+            ctx.beginPath();
+            return;
+        }
+        ctx.beginPath();
+        ctx.strokeStyle = "gray";
+        ctx.fillStyle = "gray";
+        ctx.rect(animacao.atualX , animacao.atualY , 20, 20);
+        ctx.fill();
+        ctx.stroke();
+        
+        ctx.beginPath();
+        ctx.strokeStyle = "brown";
+        ctx.fillStyle = "brown";
+        if (vez == 2){
+        ctx.rect(animacao.atualX - 50, animacao.atualY , 30, 20);
+        }else{
+        ctx.rect(animacao.atualX + 50, animacao.atualY , 30, 20);
+        }
+        ctx.fill();
+        ctx.stroke();
+        animacao.atualX += (animacao.comecoX < animacao.fimX ? 1 : -1) * animacao.speed;
     
-    ctx.beginPath();
-    ctx.strokeStyle = "gray";
-    ctx.fillStyle = "brown";
-    ctx.rect(tirox, 300, 50, 20);
-    ctx.fill();
-    ctx.stroke();
+    }
 }
 
 
@@ -636,6 +695,7 @@ function beginAnimation() {
             ctx.save();
             draw(ctx);
             ctx.restore();
+        
            
         }
         //Guardamos o tempo desse quadro para usar no próximo desenho
