@@ -12,6 +12,8 @@ const canvas = document.querySelector('#canvas');
 const ctx = canvas.getContext('2d');
 
 var vez = 0
+var vidasJog1 = 3
+var vidasJog2 = 3
 
 var botao = {
     x: 50,
@@ -82,7 +84,7 @@ canvas.addEventListener('click', function(evt) {
             location.href = 'https://www.google.com';
         }
     }
-    if (isInside(mousePos, botaovoltar) && vez==-1) {
+    if (isInside(mousePos, botaovoltar) && vez==-1 || vez==-2) {
         vez=0;
         telaInicial()
     }
@@ -110,9 +112,13 @@ canvas.addEventListener('click', function(evt) {
             ctx.fillStyle = "black";
             ctx.fillText("O cartucho estava cheio!",50,620);
             vidasJog2=vidasJog2-1;
+            if (vidasJog1 == 0 || vidasJog2 == 0){
+                verificar(vidasJog1,vidasJog2);
+            }else{
             atualizarVidas(vidasJog1,vidasJog2);
             vez=2;
             ordemBalas.shift()
+            }
         }
     }
     if (isInside(mousePos, botao2) && vez==2) {
@@ -131,9 +137,13 @@ canvas.addEventListener('click', function(evt) {
             ctx.fillStyle = "black";
             ctx.fillText("O cartucho estava cheio!",850,620);
             vidasJog1=vidasJog1-1;
+            if (vidasJog1 == 0 || vidasJog2 == 0){
+                verificar(vidasJog1,vidasJog2);
+            }else{
             atualizarVidas(vidasJog1,vidasJog2);
             vez=1;
             ordemBalas.shift()
+            }
         }
     }
     if (isInside(mousePos, botao3) && vez==1) {
@@ -152,9 +162,13 @@ canvas.addEventListener('click', function(evt) {
             ctx.fillStyle = "black";
             ctx.fillText("O cartucho estava cheio!",50,620);
             vidasJog1=vidasJog1-1;
+            if (vidasJog1 == 0 || vidasJog2 == 0){
+                verificar(vidasJog1,vidasJog2);
+            }else{
             atualizarVidas(vidasJog1,vidasJog2);
             vez=2;
             ordemBalas.shift()
+            }
         }
     }
     if (isInside(mousePos, botao4) && vez==2) {
@@ -173,16 +187,46 @@ canvas.addEventListener('click', function(evt) {
             ctx.fillStyle = "black";
             ctx.fillText("O cartucho estava cheio!",850,620);
             vidasJog2=vidasJog2-1;
+            if (vidasJog1 == 0 || vidasJog2 == 0){
+                verificar(vidasJog1,vidasJog2);
+            }else{
             atualizarVidas(vidasJog1,vidasJog2);
+            
             vez=1;
             ordemBalas.shift()
+            }
         }
     }
 },);
 
+function verificar(vidas1,vidas2){
+        ctx.beginPath();
+        ctx.strokeStyle = "white";
+        ctx.fillStyle = "gray";
+        ctx.rect(0,0,1300,1000)
+        ctx.fill();
+        ctx.stroke();
+        vez=-2
+        ctx.font = '20px Helvetica';
+        ctx.fillStyle = "black";
+        if (vidas1 == 0){
+            var mensagemperd = "Jogador 1 perdeu!"
+        }else{
+            var mensagemperd = "Jogador 2 perdeu!"
+        }
+        ctx.fillText(mensagemperd,  570, 300 );
+        ctx.beginPath();
+        ctx.strokeStyle = "black";
+        ctx.fillStyle = "white";
+        ctx.rect(botaovoltar.x, botaovoltar.y, botaovoltar.width, botaovoltar.height);
+        ctx.fill();
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.fillStyle = "black";
+        ctx.fillText("Voltar",botaovoltar.x+40,botaovoltar.y+30);
+}
 
-var vidasJog1 = 3
-var vidasJog2 = 3
+
 
 
 
@@ -219,7 +263,7 @@ while (indice>0){
 }
 
 function balasAleatorias(ordemBalas){
-    let quantidadeBalas = 3;
+    let quantidadeBalas = 8;
     for (var i = 1; i < quantidadeBalas+1; i++){
         var bala = Math.floor(Math.random() * 2);;
         ordemBalas.push(bala);
@@ -228,10 +272,21 @@ function balasAleatorias(ordemBalas){
 }
 
 function atualizarVez(ordemBalas){
-    ctx.clearRect(0,577,1300,100);
+    ctx.beginPath()
+    ctx.strokeStyle = "gray";
+    ctx.fillStyle = "gray";
+    ctx.rect(0,577,1300,100);
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
     if (ordemBalas[0] == undefined){
-        ctx.clearRect(250,100,800,100);
-        ctx.clearRect(550,400,500,140);
+        ctx.beginPath();
+        ctx.strokeStyle = "brown";
+        ctx.fillStyle = "brown";
+        ctx.rect(250,100,800,100);
+        ctx.rect(550,400,500,140);
+        ctx.fill();
+        ctx.stroke();
         ordemBalas = balasAleatorias(ordemBalas)
         var cheio = 0;
         var vazio = 0;
@@ -279,7 +334,12 @@ function atualizarVez(ordemBalas){
 }
 function atualizarVidas(vidas1,vidas2){
     ctx.beginPath();
-    ctx.clearRect(70,400,100,50);
+    ctx.fillStyle = "gray";
+    ctx.strokeStyle = "gray";
+    ctx.rect(70,400,100,50);
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
     ctx.font = '20px Helvetica';
     ctx.fillStyle = "black";
     var textoVidas1 = "Vidas:"+vidas1;
@@ -287,7 +347,12 @@ function atualizarVidas(vidas1,vidas2){
     ctx.fill();
 
     ctx.beginPath();
-    ctx.clearRect(1150,400,200,100);
+    ctx.fillStyle = "gray";
+    ctx.strokestyle = "gray";
+    ctx.rect(1150,400,200,100);
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
     ctx.font = '20px Helvetica';
     ctx.fillStyle = "black";
     var textoVidas2 = "Vidas:"+vidas2;
@@ -300,8 +365,8 @@ telaInicial()
 function telaInicial(){
     ctx.beginPath();
     ctx.strokeStyle = "white";
-    ctx.fillStyle = "white";
-    ctx.rect(0,0,1000,1000)
+    ctx.fillStyle = "gray";
+    ctx.rect(0,0,1300,1000)
     ctx.fill();
     ctx.stroke();
     ctx.beginPath();
@@ -328,7 +393,7 @@ function telaInicial(){
 function telaSobre(){
     ctx.beginPath();
         ctx.strokeStyle = "white";
-        ctx.fillStyle = "white";
+        ctx.fillStyle = "gray";
         ctx.rect(0,0,1000,1000)
         ctx.fill();
         ctx.stroke();
@@ -352,12 +417,14 @@ function telaSobre(){
         ctx.fillText("Voltar",botaovoltar.x+40,botaovoltar.y+30);
 }
 
-function iniciarJogo(ordemBalas){
+function iniciarJogo(){
+ordemBalas = []
   balasAleatorias(ordemBalas)
-console.log(ordemBalas)
+vidasJog1=3
+vidasJog2=3
 ctx.beginPath();
 ctx.strokeStyle = "black";
-ctx.fillStyle = "white";
+ctx.fillStyle = "brown";
 ctx.rect(200,75,900,500)
 ctx.fill();
 ctx.stroke();
@@ -434,7 +501,11 @@ for (var i = 0; i < vazio; i++){
 
 function draw(ctx) {
     if (vez == 1){
-        ctx.clearRect(900, 300, 160, 100);
+        ctx.strokeStyle = "brown";
+        ctx.fillStyle = "brown";
+        ctx.rect(900, 300, 160, 100);
+        ctx.fill();
+        ctx.stroke();
         ctx.beginPath();
         ctx.strokeStyle = "gray";
         ctx.fillStyle = "gray";
@@ -445,16 +516,23 @@ function draw(ctx) {
         ctx.fill();
         ctx.stroke();
 
-
-        ctx.clearRect(botao2.x-1, botao2.y-1, botao2.width+2, botao2.height+2);
-        ctx.clearRect(botao4.x-1, botao4.y-1, botao4.width+2, botao4.height+2);
-        ctx.clearRect(0,0,1350,73);
-        ctx.font = "40px Helvetica";
+        ctx.strokeStyle = "gray";
         ctx.fillStyle = "gray";
+        ctx.rect(botao2.x-1, botao2.y-1, botao2.width+2, botao2.height+2);
+        ctx.rect(botao4.x-1, botao4.y-1, botao4.width+2, botao4.height+2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.strokeStyle = "gray";
+        ctx.fillStyle = "gray";
+        ctx.rect(0,0,1350,73);
+        ctx.fill();
+        ctx.stroke();
+        ctx.font = "40px Helvetica";
+        ctx.fillStyle = "black";
         ctx.fillText("Vez do jogador 1",500,60);
         ctx.beginPath();
         ctx.strokeStyle = "black";
-        ctx.fillStyle = "gray";
+        ctx.fillStyle = "brown";
         ctx.rect(botao.x, botao.y, botao.width, botao.height);
         ctx.rect(botao3.x, botao3.y, botao3.width, botao3.height);
         ctx.fill();
@@ -471,9 +549,14 @@ function draw(ctx) {
         ctx.fillStyle = "black";
         ctx.fillText('Atirar em si',  botao3.x + 5 , botao3.y + 30 );
         ctx.fill();
+        
     }
     else if (vez == 2){
-        ctx.clearRect(230, 300, 160, 100);
+        ctx.strokeStyle = "brown";
+        ctx.fillStyle = "brown";
+        ctx.rect(230, 300, 160, 100);
+        ctx.fill();
+        ctx.stroke();
         ctx.beginPath();
         ctx.strokeStyle = "gray";
         ctx.fillStyle = "gray";
@@ -484,15 +567,20 @@ function draw(ctx) {
         ctx.fill();
         ctx.stroke();
 
-        ctx.clearRect(botao.x-1, botao.y-1, botao.width+2, botao.height+2);
-        ctx.clearRect(botao3.x-1, botao3.y-1, botao3.width+2, botao3.height+2);
-        ctx.clearRect(0,0,1350,73);
+        ctx.beginPath();
+        ctx.strokeStyle = "gray";
+        ctx.fillStyle = "gray";
+        ctx.rect(botao.x-1, botao.y-1, botao.width+2, botao.height+2);
+        ctx.rect(botao3.x-1, botao3.y-1, botao3.width+2, botao3.height+2);
+        ctx.rect(0,0,1350,73);
+        ctx.fill();
+        ctx.stroke();
         ctx.font = "40px Helvetica";
         ctx.fillStyle = "black";
         ctx.fillText("Vez do jogador 2",500,60);
         ctx.beginPath();
         ctx.strokeStyle = "black";
-        ctx.fillStyle = "gray";
+        ctx.fillStyle = "brown";
         ctx.rect(botao2.x, botao2.y, botao2.width, botao2.height);
         ctx.rect(botao4.x, botao4.y, botao4.width, botao4.height);
         ctx.fill();
@@ -509,7 +597,21 @@ function draw(ctx) {
         ctx.fillStyle = "black";
         ctx.fillText('Atirar em si',  botao4.x + 5 , botao4.y + 30 );
         ctx.fill();
+        
     }
+}
+var tirox = 250
+
+function update(time) {
+    ctx.ClearRect(tirox, 300, 30, 20);
+    tirox++;
+    
+    ctx.beginPath();
+    ctx.strokeStyle = "gray";
+    ctx.fillStyle = "brown";
+    ctx.rect(tirox, 300, 50, 20);
+    ctx.fill();
+    ctx.stroke();
 }
 
 
@@ -528,12 +630,13 @@ function beginAnimation() {
         if (lastFrameTime !== 0) {
             //Calculamos o tempo transcorrido, em segundos
             const elapsed = (time - lastFrameTime) / 1000;
-            //Atualizamos a lógica
+            update(elapsed)//Atualizamos a lógica
 
             //Desenhamos
             ctx.save();
             draw(ctx);
             ctx.restore();
+           
         }
         //Guardamos o tempo desse quadro para usar no próximo desenho
         lastFrameTime = time;
