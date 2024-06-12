@@ -391,6 +391,10 @@ function telaInicial(){
     ctx.fill();
     ctx.stroke();
     ctx.beginPath();
+    ctx.font = '60px Helvetica';
+    ctx.fillStyle = "black";
+    ctx.fillText("Roleta brasileira", 450 , 100 );
+    ctx.beginPath();
     ctx.strokeStyle = "black";
     ctx.fillStyle = "white";
     ctx.rect(botaojogar.x, botaojogar.y, botaojogar.width, botaojogar.height);
@@ -415,7 +419,7 @@ function telaSobre(){
     ctx.beginPath();
         ctx.strokeStyle = "white";
         ctx.fillStyle = "gray";
-        ctx.rect(0,0,1000,1000)
+        ctx.rect(0,0,1300,1000)
         ctx.fill();
         ctx.stroke();
         ctx.beginPath();
